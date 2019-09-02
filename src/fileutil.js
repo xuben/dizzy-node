@@ -2,9 +2,12 @@
 let fs = require('fs');
 let readline = require('readline');
 
-function createFile(fileName) {
+function createFile(fileName, content) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(fileName, '', 'utf8', err => {
+        if (!content) {
+            content = '';
+        }
+        fs.writeFile(fileName, content, 'utf8', err => {
             if (err) {
                 console.error(err);
                 resolve(false);
