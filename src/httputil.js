@@ -38,6 +38,7 @@ function post(url, postData) {
             if (200 != statusCode) {
                 // consume response data to release memory
                 res.resume();
+                console.warn('http post error status', statusCode, url);
                 resolve({success: false, statusCode: statusCode});
                 return;
             }
@@ -49,12 +50,12 @@ function post(url, postData) {
             res.on('end', () => {
                 resolve({success: true, data: rawData});
             });
+        }).on('error', err => {
+            console.error('http post error', err);
+            resolve({success: false, err: err});
         });
         req.write(postData);
         req.end();
-    }).on('error', err => {
-        console.error('http post error', err);
-        resolve({success: false, err: err});
     });
 }
 
