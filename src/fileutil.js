@@ -21,6 +21,7 @@ function createFile(fileName, content) {
 function writeLinesStep(fileName, lines, step, start, end, callback) {
     let tmpLines = lines.slice(start, end);
     let data = tmpLines.join('\n');
+    data += '\n';
     fs.writeFile(fileName, data, {'flag': 'a'}, err => {
         if (err) {
             console.error(err);
