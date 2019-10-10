@@ -40,6 +40,8 @@ function writeLines(fileName, lines) {
     return new Promise((resolve, reject) => {
         if (Array.isArray(lines)) {
             writeLinesStep(fileName, lines, 50, 0, 50, resolve);
+        } else if (lines instanceof Set) {
+            writeLinesStep(fileName, Array.from(lines), 50, 0, 50, resolve);
         } else {
             fs.writeFile(fileName, lines + '\n', {'flag': 'a'}, err => {
                 if (err) {
