@@ -1,12 +1,25 @@
 'use strict';
 let fs = require('fs');
+let path = require('path');
 let readline = require('readline');
+
+function mkdirsSync(dirname) {
+    if (fs.existsSync(dirname)) {
+        return true;
+    } else {
+        if (mkdirsSync(path.dirname(dirname))) {
+            fs.mkdirSync(dirname);
+            return true;
+        }
+    }
+}
 
 function createFile(fileName, content) {
     return new Promise((resolve, reject) => {
         if (!content) {
             content = '';
         }
+        mkdirsSync(path.dirname(fileName));
         fs.writeFile(fileName, content, 'utf8', err => {
             if (err) {
                 console.error(err);
@@ -100,9 +113,10 @@ function deleteall(path) {
 
 function split(fileName, eachNum) {
     return new Promise((resolve, reject) => {
-        readLines(fileName, lines => {
+        readLines(fileName).then(result => {
             let start = 0;
             let part = 1;
+            let lines = result.lines;
             let len = lines.length;
             while (start < len) {
                 let end = Math.min(len, start + eachNum);
@@ -110,6 +124,7 @@ function split(fileName, eachNum) {
                 part++;
                 start = end;
             }
+            resolve();
         });
     });
 }
